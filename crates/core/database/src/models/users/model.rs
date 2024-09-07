@@ -295,13 +295,20 @@ impl User {
         // Ensure none of the following substrings show up in the username
         const BLOCKED_SUBSTRINGS: &[&str] = &["```"];
 
-        for substr in BLOCKED_SUBSTRINGS {
-            if username_lowercase.contains(substr) {
-                return Err(create_error!(InvalidUsername));
-            }
-        }
+        // sanitizes the username by removing ALL blocked substrings from the username
+        let sanitized_username = BLOCKED_SUBSTRINGS
+            .iter()
+            .fold(username_lowercase, |current_username, blocked_substring| {
+                current_username.replace(blocked_substring, "")
+            });
 
-        Ok(username)
+        // for substr in BLOCKED_SUBSTRINGS {
+        //     if username_lowercase.contains(substr) {
+        //         return Err(create_error!(InvalidUsername));
+        //     }
+        // }
+
+        Ok(sanitized_username)
     }
 
     /// Find a user and session ID from a given token and hint
