@@ -302,6 +302,10 @@ impl User {
                 current_username.replace(blocked_substring, "")
             });
 
+        if (sanitized_username.len() == 0) {
+            return Err(create_error!(InvalidUsername));
+        }
+
         // for substr in BLOCKED_SUBSTRINGS {
         //     if username_lowercase.contains(substr) {
         //         return Err(create_error!(InvalidUsername));
